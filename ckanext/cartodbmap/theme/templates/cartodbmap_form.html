@@ -1,0 +1,14 @@
+{% resource 'cartodbmap/main' %}
+{% import 'macros/form.html' as form %}
+
+{% block form %}
+
+{% block form_required_fields %}
+{% endblock %}
+{{
+    form.input('cartodb_vis_url', label=_('CartoDB Vis URL'),
+        error=errors.cartodb_vis_url,
+        value=resource_view['cartodb_vis_url'], is_required=false,
+        placeholder=_('Leave blank to create new CartoDB Visualization from this resource'))
+}}
+{% endblock %}

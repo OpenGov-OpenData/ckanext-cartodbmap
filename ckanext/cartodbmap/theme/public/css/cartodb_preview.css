@@ -1,0 +1,23 @@
+.cartodb-map {
+  height: 500px;
+  cursor: default;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+
+/* form input */
+#cartodb_vis_url {
+  width: 98%;
+  
+}
+
+/* Hide defualt filters module */
+div[data-module="resource-view-filters-form"] {
+  display:none;
+}
+
+

@@ -1,0 +1,11 @@
+{% resource 'cartodbmap/main' %}
+<div
+  data-module = "cartodb_preview"
+  data-module-resource-id = "{{ resource.id }}"
+  data-module-cartodb-vis-url = "{{ resource_view.cartodb_vis_url }}"
+  id = "cartodb-map-{{ resource_view.id }}"
+  class = "cartodb-map"
+  >
+	<div id="cartodb-map-container">
+	</div>
+</div>
