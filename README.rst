@@ -1,35 +1,6 @@
-.. You should enable this project on travis-ci.org and coveralls.io to make
-   these badges work. The necessary Travis and Coverage config files have been
-   generated for you.
-
-.. image:: https://travis-ci.org/Ontodia/ckanext-cartodbmap.svg?branch=master
-    :target: https://travis-ci.org/Ontodia/ckanext-cartodbmap
-
-.. image:: https://coveralls.io/repos/Ontodia/ckanext-cartodbmap/badge.png?branch=master
-  :target: https://coveralls.io/r/Ontodia/ckanext-cartodbmap?branch=master
-
-.. image:: https://pypip.in/download/ckanext-cartodbmap/badge.svg
-    :target: https://pypi.python.org/pypi//ckanext-cartodbmap/
-    :alt: Downloads
-
-.. image:: https://pypip.in/version/ckanext-cartodbmap/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-cartodbmap/
-    :alt: Latest Version
-
-.. image:: https://pypip.in/py_versions/ckanext-cartodbmap/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-cartodbmap/
-    :alt: Supported Python versions
-
-.. image:: https://pypip.in/status/ckanext-cartodbmap/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-cartodbmap/
-    :alt: Development Status
-
-.. image:: https://pypip.in/license/ckanext-cartodbmap/badge.svg
-    :target: https://pypi.python.org/pypi/ckanext-cartodbmap/
-    :alt: License
-
 =============
-ckanext-cartodbmap
+ckanext-cartodbmap 
+CKAN CartoDB ResourceView
 =============
 
 .. Put a description of your extension here:
@@ -78,9 +49,9 @@ Config Settings
 
 Document any optional config settings here. For example::
 
-    # ckanext-cartodbmap
-	ckanext.cartodbmap.cartodb.username = <CartoDB Username Here> 
-	ckanext.cartodbmap.cartodb.key = <API Key here> 
+# ckanext-cartodbmap
+ckanext.cartodbmap.cartodb.username = <CartoDB Username Here> 
+ckanext.cartodbmap.cartodb.key = <API Key here> 
 
 
 ------------------------
