@@ -1,6 +1,5 @@
 =============
-ckanext-cartodbmap 
-CKAN CartoDB ResourceView
+ckanext-cartodbmap (CKAN CartoDB ResourceView)
 =============
 
 .. Put a description of your extension here:
