@@ -1,6 +1,12 @@
 =============
 ckanext-cartodbmap (CKAN CartoDB ResourceView)
 =============
+------------
+Dependencies
+------------
+Install python-slugfiy package::
+
+     pip install python-slugify
 
 ------------
 Installation
