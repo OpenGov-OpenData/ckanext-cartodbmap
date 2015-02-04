@@ -28,10 +28,10 @@ To install ckanext-cartodbmap:
 ---------------
 Config Settings
 ---------------
-Add following in config settings:
+Add following in config settings::
 
-	ckanext.cartodbmap.cartodb.username = <CartoDB Username Here> 
-	ckanext.cartodbmap.cartodb.key = <API Key here> 
+    ckanext.cartodbmap.cartodb.username = <CartoDB Username Here> 
+    ckanext.cartodbmap.cartodb.key = <API Key here> 
 
 
 ------------------------
