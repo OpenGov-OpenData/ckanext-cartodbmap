@@ -1,12 +1,6 @@
 =============
 ckanext-cartodbmap (CKAN CartoDB ResourceView)
 =============
-------------
-Dependencies
-------------
-Install python-slugfiy package::
-
-     pip install python-slugify
 
 ------------
 Installation
@@ -17,7 +11,11 @@ To install ckanext-cartodbmap:
 1. Activate your CKAN virtual environment, for example::
 
      . /usr/lib/ckan/default/bin/activate
+     
+2. Install requirements::
 
+     pip install -r requirements.txt
+     
 2. Install the ckanext-cartodbmap Python package into your virtual environment::
 
      pip install ckanext-cartodbmap
