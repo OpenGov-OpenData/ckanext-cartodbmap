@@ -2,26 +2,9 @@
 ckanext-cartodbmap (CKAN CartoDB ResourceView)
 =============
 
-.. Put a description of your extension here:
-   What does it do? What features does it have?
-   Consider including some screenshots or embedding a video!
-
-
-------------
-Requirements
-------------
-
-For example, you might want to mention here which versions of CKAN this
-extension works with.
-
-
 ------------
 Installation
 ------------
-
-.. Add any additional install steps to the list below.
-   For example installing any non-Python dependencies or adding any required
-   config settings.
 
 To install ckanext-cartodbmap:
 
@@ -46,9 +29,7 @@ To install ckanext-cartodbmap:
 Config Settings
 ---------------
 
-Document any optional config settings here. For example::
-
-# ckanext-cartodbmap
+	# ckanext-cartodbmap
 	ckanext.cartodbmap.cartodb.username = <CartoDB Username Here> 
 	ckanext.cartodbmap.cartodb.key = <API Key here> 
 
