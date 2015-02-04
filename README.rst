@@ -49,8 +49,8 @@ Config Settings
 Document any optional config settings here. For example::
 
 # ckanext-cartodbmap
-ckanext.cartodbmap.cartodb.username = <CartoDB Username Here> 
-ckanext.cartodbmap.cartodb.key = <API Key here> 
+	ckanext.cartodbmap.cartodb.username = <CartoDB Username Here> 
+	ckanext.cartodbmap.cartodb.key = <API Key here> 
 
 
 ------------------------
