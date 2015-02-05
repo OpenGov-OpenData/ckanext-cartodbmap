@@ -19,6 +19,13 @@ ckan.module('cartodb_preview', function (jQuery, _) {
 						+ '<a id="go_to_cartodb_vis" target="_blank" href="' + options.cartodbVisUrl.replace('api/v2/','').replace('/viz.json','/map') + '" class="btn btn-link">'
 						+	'Edit'
 						+ '</a></div>'))
+	
+      self.el.append($('<div style="position:absolute;bottom:9px;left:115px;z-index:999">'
+						+ ' <a id="get_the_data" href="' + options.resourceUrl + '" target="_blank">'
+						+ '<img height=10 style="vertical-align:-24px;" src="https://raw.githubusercontent.com/betanyc/getDataButton/master/png/80x15.png">'
+						+ '</img></a>'
+						+ '</div>'))
+	
       }
 }
 });

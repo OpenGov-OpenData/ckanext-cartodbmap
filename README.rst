@@ -14,7 +14,7 @@ To install ckanext-cartodbmap:
      
 2. Install requirements::
 
-     pip install -r requirements.txt
+     pip install -r dev-requirements.txt
      
 2. Install the ckanext-cartodbmap Python package into your virtual environment::
 

@@ -5,10 +5,45 @@
 
 {% block form_required_fields %}
 {% endblock %}
+<h2 style="margin-left:20px;">CartodDB</h2>
+
 {{
-    form.input('cartodb_vis_url', label=_('CartoDB Vis URL'),
+    form.input('cartodb_vis_url', label=_('Vis URL'),
         error=errors.cartodb_vis_url,
         value=resource_view['cartodb_vis_url'], is_required=false,
         placeholder=_('Leave blank to create new CartoDB Visualization from this resource'))
 }}
+<div>
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default" id="panel2">
+        <div class="panel-heading">
+             <h4 class="panel-title">
+        <a data-toggle="collapse" data-target="#collapseTwo" 
+           href="#collapseTwo" class="collapsed" style="margin-left:20px;">
+          Create this visualization in your own CartoDB account?
+        </a>
+      </h4>
+
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse">
+            <div class="panel-body">
+            	{{
+    				form.input('cartodb_account', label=_('Username'),
+        			error=errors.cartodb_account,
+        			value=resource_view['cartodb_account'], is_required=false,
+        			placeholder=_('Username'))
+				}}
+				{{
+    				form.input('cartodb_key', label=_('API Key'),
+        			error=errors.cartodb_key,
+        			value=resource_view['cartodb_key'], is_required=false,
+        			placeholder=_('API Key'))
+				}}
+				<a style="margin-left:130px;" href="https://cartodb.com/signup" target="_blank">Don't have a CartoDB account yet?</a>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
 {% endblock %}

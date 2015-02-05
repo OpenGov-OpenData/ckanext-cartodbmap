@@ -20,4 +20,14 @@ div[data-module="resource-view-filters-form"] {
   display:none;
 }
 
-
+/*
+.panel-heading a:after {
+    font-family:'Glyphicons Halflings';
+    content:"--";
+    float: right;
+    color: grey;
+}
+.panel-heading a.collapsed:after {
+    content:"0";
+}
+*/
