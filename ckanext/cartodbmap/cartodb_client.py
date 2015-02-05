@@ -6,6 +6,7 @@ import os
 import time
 
 import ckan.lib.helpers as h
+import ckan.plugins as plugins
 
 #### CARTODB SETTINGS ####
 
@@ -83,6 +84,7 @@ class CartoDBClient:
     
     # Public Methods
     def create_cartodb_resource_view(self,resource_url):
+        reason = "Check your API Parameters"
         try:
             r = self.__upload_url_resource(resource_url)
             item_queue_id = r.json().get("item_queue_id")
@@ -108,10 +110,10 @@ class CartoDBClient:
                     reason = "Failed Creating Table"
             else:
                 reason = "Failed Importing Data"
-            message = plugins.toolkit._('Unable to autmatically create visualization from this resource: ' + resoruce_format_lower)
+            message = plugins.toolkit._('Unable to create visualization - ' + reason)
             raise plugins.toolkit.Invalid(message)
         except:
-            message = plugins.toolkit._('Unable to autmatically create visualization from this resource: ' + resoruce_format_lower)
+            message = plugins.toolkit._('Unable to create visualization - ' + reason)
             raise plugins.toolkit.Invalid(message)
             
             

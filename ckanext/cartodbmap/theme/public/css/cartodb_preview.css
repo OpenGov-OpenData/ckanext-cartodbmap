@@ -20,14 +20,41 @@ div[data-module="resource-view-filters-form"] {
   display:none;
 }
 
-/*
-.panel-heading a:after {
-    font-family:'Glyphicons Halflings';
-    content:"--";
-    float: right;
-    color: grey;
+#loading {
+  display:none;
+  position:fixed;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
+  background:rgba(240,240,240,0.7);
+  z-index:1000;
 }
-.panel-heading a.collapsed:after {
-    content:"0";
+  
+#loadingcontent {
+  display:table;
+  position:fixed;
+  left:0;
+  top:0;
+  width:100%;
+  height:100%;
 }
-*/
+
+#loading-spinner {
+  position: absolute;
+  left: 50%;
+  top : 50%;
+}
+
+
+
+.map-button{
+  /* color:#187794; */
+  color: rgba(100,100,100,.8);
+  height: 10px;
+  vertical-align: 5px;
+  padding: 3px 6px;
+  line-height:12px;
+  font-size:12px;
+  
+}

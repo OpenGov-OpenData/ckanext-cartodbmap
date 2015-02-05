@@ -14,18 +14,23 @@
         placeholder=_('Leave blank to create new CartoDB Visualization from this resource'))
 }}
 <div>
-<div class="panel-group" id="accordion">
-    <div class="panel panel-default" id="panel2">
+<div id="loading">
+    <div id="loadingcontent">
+        <div id="loading-spinner"></div>
+    </div>
+</div>
+<div class="panel-group" id="accordion" style="background:#f7f7f7">
+    <div class="panel panel-default" id="panel2" >
         <div class="panel-heading">
              <h4 class="panel-title">
-        <a data-toggle="collapse" data-target="#collapseTwo" 
-           href="#collapseTwo" class="collapsed" style="margin-left:20px;">
-          Create this visualization in your own CartoDB account?
-        </a>
-      </h4>
-
+        		<a data-toggle="collapse" data-target="#collapseTwo" 
+           			href="#collapseTwo" class="collapsed" style="margin-left:20px;vertical-align:-6px;"
+           			id="use_your_own_cartodb">
+          			Create this visualization in your own CartoDB account?
+        		</a>
+      		 </h4>
         </div>
-        <div id="collapseTwo" class="panel-collapse collapse">
+        <div id="collapseTwo" class="panel-collapse collapse" >
             <div class="panel-body">
             	{{
     				form.input('cartodb_account', label=_('Username'),
@@ -39,7 +44,9 @@
         			value=resource_view['cartodb_key'], is_required=false,
         			placeholder=_('API Key'))
 				}}
-				<a style="margin-left:130px;" href="https://cartodb.com/signup" target="_blank">Don't have a CartoDB account yet?</a>
+				<div style="margin-left:130px; margin-top:-15px;padding-bottom: 12px;" >
+					<a href="https://cartodb.com/signup" target="_blank">Don't have a CartoDB account yet?</a>
+				</div>
             </div>
         </div>
     </div>
