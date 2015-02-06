@@ -6,7 +6,6 @@
 {% block form_required_fields %}
 {% endblock %}
 <h2 style="margin-left:20px;">CartodDB</h2>
-
 {{
     form.input('cartodb_vis_url', label=_('Vis URL'),
         error=errors.cartodb_vis_url,
@@ -23,14 +22,14 @@
     <div class="panel panel-default" id="panel2" >
         <div class="panel-heading">
              <h4 class="panel-title">
-        		<a data-toggle="collapse" data-target="#collapseTwo" 
-           			href="#collapseTwo" class="collapsed" style="margin-left:20px;vertical-align:-6px;"
+        		<a data-toggle="collapse" data-target="#collapseOne" 
+           			class="collapsed" style="margin-left:20px;vertical-align:-6px;cursor:pointer;"
            			id="use_your_own_cartodb">
           			Create this visualization in your own CartoDB account?
         		</a>
       		 </h4>
         </div>
-        <div id="collapseTwo" class="panel-collapse collapse" >
+        <div id="collapseOne" class="panel-collapse collapse" >
             <div class="panel-body">
             	{{
     				form.input('cartodb_account', label=_('Username'),

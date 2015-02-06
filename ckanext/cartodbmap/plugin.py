@@ -2,6 +2,8 @@ import ckan.plugins as plugins
 import ckan.plugins.toolkit as toolkit
 import cartodb_client
 import ckan.lib.helpers as h
+import ckan.lib.datapreview as datapreview
+import ckan.logic as ckanlogic
 
 ignore_missing = plugins.toolkit.get_validator('ignore_missing')
 
@@ -40,10 +42,15 @@ def vis_from_resource(url,context):
         return cc.create_cartodb_resource_view(resource_url)
     return url
 
+
 class CartodbmapPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=True)
     plugins.implements(plugins.IResourceView, inherit=True)
-  
+    
+    # IResourceController is needed if you need to auto generate a view once a resource is created. 
+    plugins.implements(plugins.IResourceController, inherit=True)
+
+
     # IConfigurer
     def update_config(self, config_):
         toolkit.add_template_directory(config_, 'theme/templates')
@@ -59,7 +66,7 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
 
         return {'name': 'cartodb-map',
                 'title': 'CartoDB Map',
-                'icon': 'map-marker',
+                'icon': 'compass',
                 'schema': schema,
                 'iframed': False}
     
@@ -78,5 +85,26 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
         return 'cartodbmap_view.html'
 
     def form_template(self, context, data_dict):
+        # Set default view name to CartoDB View
+        if(not 'title' in data_dict["resource_view"]):
+            data_dict["resource_view"]["title"] = "CartoDB View"
         return 'cartodbmap_form.html'
+    
+    # IResourceController
+    def add_default_views(self, context, data_dict):
+        resource = data_dict
+        if resource.get('format').lower() == 'geojson':
+                cartodb_vis_url = cc.create_cartodb_resource_view(resource['url']);
+                view = {
+                    'title': 'CartoDB View',
+                    # detect when it is a service, not a file
+                    'description': 'CartoDB View of the GeoJSON file',
+                    'resource_id': resource['id'],
+                    'view_type': 'cartodb-map',
+                    'cartodb_vis_url' : cartodb_vis_url
+                }
+                ckanlogic.get_action('resource_view_create')(context,view)
+                
+    def after_create(self, context, data_dict):
+        self.add_default_views(context, data_dict)
     
