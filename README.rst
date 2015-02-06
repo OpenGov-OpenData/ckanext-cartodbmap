@@ -40,11 +40,9 @@ Add following in config settings::
     ckanext.cartodbmap.cartodb.key = <API Key here> 
 
 
-Remove geojson_preview ckan.plugins list
-
-
-Disable current default geojson view (removes geojson from the list) ::
-		
+Extras:
+- Remove geojson_preview from ckan.plugins list
+- Disable current default geojson view (removes geojson from the list) ::
 	ckan.preview.json_formats = json gjson
 
 
