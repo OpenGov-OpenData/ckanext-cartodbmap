@@ -2,6 +2,8 @@
 ckanext-cartodbmap (CKAN CartoDB ResourceView)
 =============
 
+
+
 ------------
 Installation
 ------------
