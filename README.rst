@@ -39,10 +39,12 @@ Add following in config settings::
     ckanext.cartodbmap.cartodb.username = <CartoDB Username Here> 
     ckanext.cartodbmap.cartodb.key = <API Key here> 
 
-
 Extras:
-- Remove geojson_preview from ckan.plugins list
-- Disable current default geojson view (removes geojson from the list) ::
+
+Remove geojson_preview from ckan.plugins list
+
+Disable current default geojson view (removes geojson from the list) ::
+		
 	ckan.preview.json_formats = json gjson
 
 
