@@ -47,7 +47,7 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=True)
     plugins.implements(plugins.IResourceView, inherit=True)
     
-    # IResourceController is needed if you need to auto generate a view once a resource is created. 
+    # IResourceController is needed if you need to auto generate a view once a resource is created.
     plugins.implements(plugins.IResourceController, inherit=True)
 
 
@@ -92,8 +92,13 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
     
     # IResourceController
     def add_default_views(self, context, data_dict):
-        resource = data_dict
-        if resource.get('format').lower() == 'geojson':
+        #resources = plugins.toolkit.get_new_resources(context, data_dict)
+        #for resource in resources:
+        #    print resource
+        try:
+            resource = data_dict
+            print resource
+            if resource.get('format').lower() == 'geojson':
                 cartodb_vis_url = cc.create_cartodb_resource_view(resource['url']);
                 view = {
                     'title': 'CartoDB View',
@@ -104,7 +109,10 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
                     'cartodb_vis_url' : cartodb_vis_url
                 }
                 ckanlogic.get_action('resource_view_create')(context,view)
+        except:
+            print "!!!! Warning:: Unable create default CartoDB view"
                 
     def after_create(self, context, data_dict):
         self.add_default_views(context, data_dict)
+    
     

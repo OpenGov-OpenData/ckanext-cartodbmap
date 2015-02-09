@@ -107,7 +107,7 @@ class CartoDBClient:
                     else:
                         reason = "Failed Creating Visualization"
                 else:
-                    reason = "Failed Creating Table"
+                    reason = "Failed Creating Table. Make sure your package is public."
             else:
                 reason = "Failed Importing Data"
             message = plugins.toolkit._('Unable to create visualization - ' + reason)
