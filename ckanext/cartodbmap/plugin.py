@@ -152,7 +152,7 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
                 }
                 ckanlogic.get_action('resource_view_create')(context,view)
                 try:
-                    package_id = resource['package_id']
+                    package_id = plugins.toolkit.c.__getattr__("id")
                     create_bounding_box(context,package_id,cartodb_obj['response']['table_name'])
                 except:
                     print "Failed creating bounding box."
