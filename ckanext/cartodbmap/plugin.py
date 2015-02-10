@@ -45,7 +45,8 @@ def vis_from_resource(url,context):
         cartodb_obj = cc.create_cartodb_resource_view(resource_url)
         if(cartodb_obj["success"]):
             try:
-                package_id = plugins.toolkit.c.__getattr__("resource").get("package_id")
+                pkg_dict = plugins.toolkit.c.__getattr__("pkg_dict")
+                package_id = pkg_dict.get("id")
                 create_bounding_box(context,package_id,cartodb_obj['response']['table_name'])
             except:
                 print "Failed creating bounding box."
