@@ -6,10 +6,13 @@ import os
 import time
 
 import ckan.lib.helpers as h
-import ckan.plugins as plugins
 
 #### CARTODB SETTINGS ####
 
+
+def url_exists(path):
+    r = requests.head(path)
+    return r.status_code == requests.codes.ok
 
 class CartoDBClient:
     def __init__(self,
@@ -20,8 +23,6 @@ class CartoDBClient:
             
         self.cartodb_url = 'https://'+ self.username +'.cartodb.com'
         
-
-
     # Private Methods
     def __upload_url_resource(self,resource_url):
         resource_dict = {
@@ -84,37 +85,67 @@ class CartoDBClient:
     
     # Public Methods
     def create_cartodb_resource_view(self,resource_url):
-        reason = "Check your API Parameters"
+        cartodb_obj = {
+            'success' : None,
+            'request' : {
+                'resource_url' : resource_url,
+                'cartodb_base' : self.cartodb_url,
+                'username' : self.username,
+                'api_key' : self.api_key
+            },
+            'response' : {
+                'item_queue_id' : None,
+                'table_name' : None,
+                'table_vis_id' : None,
+                'vis_id' : None,
+                'cartodb_vis_url' : None,
+            },
+            'messages' : {
+                'user_message' : "Check your API Parameters.",
+                'error_message' : None              
+            }
+        }
+        
+        
+        if not url_exists(resource_url):
+            cartodb_obj['success'] = False
+            cartodb_obj['messages']['error_message'] = "URL doesn't exist: \'" + resource_url + "\'"
+            cartodb_obj['messages']['user_message'] = "URL doesn't exist: \'" + resource_url + "\'"
+            return cartodb_obj
+        
+        r = {'text': 'Uninitialized'}
         try:
             r = self.__upload_url_resource(resource_url)
-            item_queue_id = r.json().get("item_queue_id")
-            if(item_queue_id):
+            cartodb_obj['response']['item_queue_id'] = r.json().get('item_queue_id')
+            if(cartodb_obj['response']['item_queue_id']):
                 state = ""
                 while(state != 'complete' and  state != 'failure'):
-                    r = self.__get_import_queue(item_queue_id)
+                    r = self.__get_import_queue(cartodb_obj['response']['item_queue_id'])
                     state = r.json().get("state")
                     time.sleep(.5)
-                table_name =  r.json().get("table_name")
-                if(table_name):
-                    print "**** " + item_queue_id
-                    r = self.__get_table_details(table_name)
-                    table_vis_id = r.json().get("table_visualization",{}).get("id")
-                    r = self.__create_visualization_from_table(table_vis_id, table_name + " CKAN")
-                    vis_id = r.json().get('id')
-                    if(vis_id):
-                        print "**** " + vis_id
-                        return self.cartodb_url+ "/api/v2/viz/" + vis_id + "/viz.json"
+                cartodb_obj['response']["table_name"] =  r.json().get("table_name")
+                if(cartodb_obj['response']["table_name"]):
+                    r = self.__get_table_details(cartodb_obj['response']["table_name"] )
+                    cartodb_obj['response']["table_vis_id"] = r.json().get("table_visualization",{}).get("id")
+                    r = self.__create_visualization_from_table(cartodb_obj['response']["table_vis_id"], cartodb_obj['response']["table_name"] + " - Created by OpenData.city CKAN Extension")
+                    cartodb_obj['response']["vis_id"] = r.json().get('id')
+                    if(cartodb_obj['response']["vis_id"]):
+                        cartodb_obj['response']["cartodb_vis_url"] = self.cartodb_url+ "/api/v2/viz/" + cartodb_obj['response']["vis_id"] + "/viz.json"
+                        cartodb_obj['success'] = True
+                        return cartodb_obj
                     else:
-                        reason = "Failed Creating Visualization"
+                        cartodb_obj['messages']['user_message'] = "Failed Creating Visualization."
                 else:
-                    reason = "Failed Creating Table. Make sure your package is public."
+                    cartodb_obj['messages']['user_message'] = "Failed Creating Table."
             else:
-                reason = "Failed Importing Data"
-            message = plugins.toolkit._('Unable to create visualization - ' + reason)
-            raise plugins.toolkit.Invalid(message)
+                cartodb_obj['messages']['user_message'] = "Failed Importing Data."             
         except:
-            message = plugins.toolkit._('Unable to create visualization - ' + reason)
-            raise plugins.toolkit.Invalid(message)
+            # Dummy exception Handling
+            cartodb_obj['messages']['user_message'] = "Check your API Parameters."
+            
+        cartodb_obj['success'] = False
+        cartodb_obj['messages']['error_message'] = r.json()
+        return cartodb_obj
             
             
     

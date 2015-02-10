@@ -5,6 +5,9 @@ import ckan.lib.helpers as h
 import ckan.lib.datapreview as datapreview
 import ckan.logic as ckanlogic
 
+import json
+import requests, json
+
 ignore_missing = plugins.toolkit.get_validator('ignore_missing')
 
 CARTODB_FORMATS = ['csv','tsv','kml','kmz','xls', 'xlsx', 'geojson', 'gpx', 'osm', 'bz2', 'ods', 'zip']
@@ -33,15 +36,49 @@ def vis_from_resource(url,context):
         resource = toolkit.get_action('resource_show')(context,{'id': resource_id})
         resource_url = resource["url"]
         resoruce_format_lower = resource["format"].lower()
-        print "***** " + resource_url
         
         # Check if CartoDB accepts current file format
         if not (resoruce_format_lower in CARTODB_FORMATS):
             message = plugins.toolkit._('Unsupported CartoDB file format: ' + resoruce_format_lower)
             raise plugins.toolkit.Invalid(message)
-        return cc.create_cartodb_resource_view(resource_url)
+        
+        cartodb_obj = cc.create_cartodb_resource_view(resource_url)
+        if(cartodb_obj["success"]):
+            package_id = plugins.toolkit.c.__getattr__("resource").get("package_id")
+            create_bounding_box(context,package_id,cartodb_obj['response']['table_name'])
+            return cartodb_obj['response']["cartodb_vis_url"]
+        else:
+            message = plugins.toolkit._('Unable to create visualization: ' + cartodb_obj["messages"]["user_message"])
+            print json.dumps(cartodb_obj, indent=4, sort_keys=True)
+            raise plugins.toolkit.Invalid(message)
     return url
 
+def create_bounding_box(context,package_id,table_name):
+    package_dict = plugins.toolkit.get_action('package_show')(context, {'id' : package_id})
+    spatial_field_exists = False
+    for extra in package_dict.get('extras'):
+        if extra.get('key') == 'spatial':
+            spatial_field_exists = True
+    
+    # Create Bounding Box extra field if it doesn't exist
+    if not spatial_field_exists:
+        resource_dict = {
+            "q" : "SELECT ST_AsText(ST_Extent(the_geom)) as table_extent FROM " + table_name,
+            "api_key" : cc.api_key
+        }
+        r = requests.post(cc.cartodb_url + "/api/v2/sql"
+                        ,data=resource_dict
+                        ,headers={
+                            "Content-Type" : "application/x-www-form-urlencoded"
+                        }
+                    )
+        bbox = r.json().get('rows',[None])[0].get('table_extent')
+    
+        bbox_str = "{'type':'Polygon','coordinates': [[[" + bbox.replace('POLYGON((','').replace('))','').replace(',','],[').replace(' ',',') + "]]]}"
+        bbox_str = bbox_str.replace("'",'"')
+        
+        package_dict['extras'] += [{"key":"spatial", "value":bbox_str}]
+        plugins.toolkit.get_action('package_update')(context, package_dict)
 
 class CartodbmapPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=True)
@@ -92,23 +129,26 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
     
     # IResourceController
     def add_default_views(self, context, data_dict):
-        #resources = plugins.toolkit.get_new_resources(context, data_dict)
-        #for resource in resources:
-        #    print resource
         try:
             resource = data_dict
-            print resource
             if resource.get('format').lower() == 'geojson':
-                cartodb_vis_url = cc.create_cartodb_resource_view(resource['url']);
+                cartodb_obj = cc.create_cartodb_resource_view(resource["url"])
+                if(not cartodb_obj["success"]):
+                    message = plugins.toolkit._('Unable to create visualization: ' + cartodb_obj["messages"]["user_message"])
+                    print json.dumps(cartodb_obj, indent=4, sort_keys=True)
+                    raise plugins.toolkit.Invalid(message)
+                
                 view = {
                     'title': 'CartoDB View',
                     # detect when it is a service, not a file
                     'description': 'CartoDB View of the GeoJSON file',
                     'resource_id': resource['id'],
                     'view_type': 'cartodb-map',
-                    'cartodb_vis_url' : cartodb_vis_url
+                    'cartodb_vis_url' : cartodb_obj['response']['cartodb_vis_url']
                 }
                 ckanlogic.get_action('resource_view_create')(context,view)
+                package_id = resource['package_id']
+                create_bounding_box(context,package_id,cartodb_obj['response']['table_name'])
         except:
             print "!!!! Warning:: Unable create default CartoDB view"
                 
