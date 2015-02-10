@@ -44,8 +44,11 @@ def vis_from_resource(url,context):
         
         cartodb_obj = cc.create_cartodb_resource_view(resource_url)
         if(cartodb_obj["success"]):
-            package_id = plugins.toolkit.c.__getattr__("resource").get("package_id")
-            create_bounding_box(context,package_id,cartodb_obj['response']['table_name'])
+            try:
+                package_id = plugins.toolkit.c.__getattr__("resource").get("package_id")
+                create_bounding_box(context,package_id,cartodb_obj['response']['table_name'])
+            except:
+                print "Failed creating bounding box."
             return cartodb_obj['response']["cartodb_vis_url"]
         else:
             message = plugins.toolkit._('Unable to create visualization: ' + cartodb_obj["messages"]["user_message"])
@@ -147,8 +150,11 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
                     'cartodb_vis_url' : cartodb_obj['response']['cartodb_vis_url']
                 }
                 ckanlogic.get_action('resource_view_create')(context,view)
-                package_id = resource['package_id']
-                create_bounding_box(context,package_id,cartodb_obj['response']['table_name'])
+                try:
+                    package_id = resource['package_id']
+                    create_bounding_box(context,package_id,cartodb_obj['response']['table_name'])
+                except:
+                    print "Failed creating bounding box."
         except:
             print "!!!! Warning:: Unable create default CartoDB view"
                 
