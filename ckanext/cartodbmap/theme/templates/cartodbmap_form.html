@@ -10,7 +10,7 @@
     form.input('cartodb_vis_url', label=_('Vis URL'),
         error=errors.cartodb_vis_url,
         value=resource_view['cartodb_vis_url'], is_required=false,
-        placeholder=_('Leave blank to create new CartoDB Visualization from this resource'))
+        placeholder=_('Leave blank to create a new CartoDB Visualization from this resource'))
 }}
 <div>
 <div id="loading">
@@ -18,18 +18,20 @@
         <div id="loading-spinner"></div>
     </div>
 </div>
-<div class="panel-group" id="accordion" style="background:#f7f7f7">
+<div class="panel-group" id="accordion" style="background:#fff">
     <div class="panel panel-default" id="panel2" >
         <div class="panel-heading">
              <h4 class="panel-title">
+                {% if c.userobj.sysadmin %}
         		<a data-toggle="collapse" data-target="#collapseOne" 
            			class="collapsed" style="margin-left:20px;vertical-align:-6px;cursor:pointer;"
            			id="use_your_own_cartodb">
           			Create this visualization in your own CartoDB account?
         		</a>
+        		{% endif %}
       		 </h4>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse" >
+        <div id="collapseOne" class="panel-collapse {% if c.userobj.sysadmin %} collapse {% endif %}" >
             <div class="panel-body">
             	{{
     				form.input('cartodb_account', label=_('Username'),

@@ -21,6 +21,21 @@ $("button[name='save'],button[name='preview'],button[name='delete']").click(func
 	var spinnerTarget = document.getElementById('loading-spinner'),
 	spinner = new Spinner(spinner_opts).spin(spinnerTarget);
 });
+
+
+$("input[name='cartodb_vis_url']").blur(function() {
+	if(!$(this).val()) {
+		$("input[name='cartodb_account']").prop('disabled', false);
+		$("input[name='cartodb_key']").prop('disabled', false);
+	}
+	else {
+		$("input[name='cartodb_account']").prop('disabled', true);
+		$("input[name='cartodb_account']").val('')
+		$("input[name='cartodb_key']").prop('disabled', true);
+		$("input[name='cartodb_key']").val('')
+	}
+})
+
 // Spinner End
 
 // cartodb preview module

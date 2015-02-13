@@ -16,8 +16,8 @@ def url_exists(path):
 
 class CartoDBClient:
     def __init__(self,
-                    username=h.config.get('ckanext.cartodbmap.cartodb.username'),
-                    api_key=h.config.get('ckanext.cartodbmap.cartodb.key')):
+                    username="",
+                    api_key=""):
         self.username = username
         self.api_key = api_key
             

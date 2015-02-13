@@ -15,22 +15,38 @@ CARTODB_FORMATS = ['csv','tsv','kml','kmz','xls', 'xlsx', 'geojson', 'gpx', 'osm
 # Create New Cartodb Client
 cc = cartodb_client.CartoDBClient()
 
-def set_cartodb_account(username):
-    if not username:
+def set_cartodb_username(username,context):
+    if not username and context.get('auth_user_obj').sysadmin:
         username = h.config.get('ckanext.cartodbmap.cartodb.username')
+        
     cc.username = username
+    '''
+    if not cc.username:
+        message = plugins.toolkit._('Missing Username')
+        raise plugins.toolkit.Invalid(message)
+    '''
     cc.cartodb_url = 'https://'+ cc.username +'.cartodb.com'
     return
       
-def set_cartodb_key(key):
-    if not key:
+def set_cartodb_key(key,context):
+    if not key and context.get('auth_user_obj').sysadmin:
         key = h.config.get('ckanext.cartodbmap.cartodb.key')
+        
     cc.api_key = key
+    '''
+    if not cc.api_key:
+        message = plugins.toolkit._('Missing API Key')
+        raise plugins.toolkit.Invalid(message)
+    '''
     return
 
 def vis_from_resource(url,context):
     # Create new CartoDB Vis is url field is empty
     if not url:
+        if not (cc.api_key and cc.username):
+            message = plugins.toolkit._('Missing CartoDB Username/API Key')
+            raise plugins.toolkit.Invalid(message)
+        
         # Get resource url
         resource_id = plugins.toolkit.c.__getattr__("resource_id")
         resource = toolkit.get_action('resource_show')(context,{'id': resource_id})
@@ -59,11 +75,11 @@ def vis_from_resource(url,context):
 
 def create_bounding_box(context,package_id,table_name):
     package_dict = plugins.toolkit.get_action('package_show')(context, {'id' : package_id})
+    print json.dumps(package_dict, indent=4, sort_keys=True)
     spatial_field_exists = False
     for extra in package_dict.get('extras'):
         if extra.get('key') == 'spatial':
             spatial_field_exists = True
-    
     # Create Bounding Box extra field if it doesn't exist
     if not spatial_field_exists:
         resource_dict = {
@@ -82,7 +98,8 @@ def create_bounding_box(context,package_id,table_name):
         bbox_str = bbox_str.replace("'",'"')
         
         package_dict['extras'] += [{"key":"spatial", "value":bbox_str}]
-        plugins.toolkit.get_action('package_update')(context, package_dict)
+        print json.dumps(package_dict, indent=4, sort_keys=True)
+        ckanlogic.get_action('package_update')(context, package_dict)
 
 class CartodbmapPlugin(plugins.SingletonPlugin):
     plugins.implements(plugins.IConfigurer, inherit=True)
@@ -100,7 +117,7 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
     # IResourceView
     def info(self):
         schema  ={
-            'cartodb_account': [ignore_missing,set_cartodb_account],
+            'cartodb_account': [ignore_missing,set_cartodb_username],
             'cartodb_key'    : [ignore_missing,set_cartodb_key],
             'cartodb_vis_url': [ignore_missing,vis_from_resource],    
         }
@@ -132,10 +149,15 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
         return 'cartodbmap_form.html'
     
     # IResourceController
-    def add_default_views(self, context, data_dict):
+    def add_default_cartodb_view(self, context, data_dict):
         try:
             resource = data_dict
             if resource.get('format').lower() == 'geojson':
+                cc.username = h.config.get('ckanext.cartodbmap.cartodb.username')
+                cc.cartodb_url = 'https://'+ cc.username +'.cartodb.com'
+                cc.api_key = h.config.get('ckanext.cartodbmap.cartodb.key')
+                
+                
                 cartodb_obj = cc.create_cartodb_resource_view(resource["url"])
                 if(not cartodb_obj["success"]):
                     message = plugins.toolkit._('Unable to create visualization: ' + cartodb_obj["messages"]["user_message"])
@@ -160,6 +182,6 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
             print "!!!! Warning:: Unable create default CartoDB view"
                 
     def after_create(self, context, data_dict):
-        self.add_default_views(context, data_dict)
+        self.add_default_cartodb_view(context, data_dict)
     
     
