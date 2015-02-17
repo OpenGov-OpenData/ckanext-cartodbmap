@@ -54,24 +54,35 @@ ckan.module('cartodb_preview', function (jQuery, _) {
 	    	}).on('error', function() {
     	  		//log the error
     		});
-	  self.el.append($('<div style="position:absolute;bottom:8px;left:80px;z-index:999">'
+	  self.el.append($('<div style="position:absolute;bottom:8px;left:86px;z-index:999">'
 						+ ' <a id="get_the_data" href="http://www.opendata.city" target="_blank">'
 						+ '<img height=10 style="vertical-align:-24px;" src="//catalog.opendata.city/base/images/opendatacity_icon_sm.png">'
 						+ '</img></a>'
 						+ '</div>'))
-	  
-	  self.el.append($('<div style="position:absolute;bottom:1px;left:144px;z-index:999;">'
-						+ '<a id="go_to_cartodb_vis" target="_blank" href="' + options.resourceUrl.split('/download/')[0] + '" class="btn btn-defualt map-button">'
+	  var button_box_html = '<div class="map-button-div" style="left:147px;">'
+	  					+ '&nbsp;'
+	  					
+	  // Add Data button			
+	  button_box_html	+= '<a id="go_to_cartodb_vis" target="_blank" href="' + options.resourceUrl.split('/download/')[0] + '" class="btn btn-link map-button">'
 						+	'Data'
-						+ '</a></div>'))
+						+ '</a> '
 	  
-	  self.el.append($('<div style="position:absolute;bottom:1px;left:187px;z-index:999;">'
-						+ '<a id="go_to_cartodb_vis" target="_blank" href="' + options.cartodbVisUrl.replace('api/v2/','').replace('/viz.json','/map') + '" class="btn btn-defualt map-button">'
+	  // Add Edit button
+	  button_box_html	+= '| <a id="go_to_cartodb_vis" target="_blank" href="' + options.cartodbVisUrl.replace('api/v2/','').replace('/viz.json','/map') + '" class="btn btn-link map-button">'
 						+	'Edit'
-						+ '</a></div>'))
-					
+						+ '</a> '
+	  // Add Talk button				
+	  if(options.discourseUrl && options.discourseUrl != 'None') {
+			button_box_html += '| <a id="go_to_discourse" target="_blank" href="' + options.discourseUrl + '" class="btn btn-link map-button">'
+							+	'Talk'
+							+ '</a>'
+	  }
+	  button_box_html += '&nbsp;</div>'
+	  self.el.append($(button_box_html))	
+	  //if ( window.location === window.parent.location ) {
+	  		  map_elem.height(map_elem.parent().parent().parent().height())
+  	  //}	
 	  
-	  
-      }
+    }
 }
 });

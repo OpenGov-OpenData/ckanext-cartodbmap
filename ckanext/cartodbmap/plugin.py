@@ -40,6 +40,24 @@ def set_cartodb_key(key,context):
     '''
     return
 
+
+def get_discourse_url():
+    suffix = h.config.get('ckanext.cartodbmap.discourse.suffix',None)
+    if suffix:
+        discourse_url = h.config.get('discourse.url').rstrip('\/')
+        
+        try:
+            pkg_dict = plugins.toolkit.c.__getattr__("pkg_dict")
+            package_name = pkg_dict.get("name")
+        except:
+            package_name = plugins.toolkit.c.__getattr__("id")
+        discourse_url += "/t/"
+        discourse_url += package_name
+        discourse_url += "-"
+        discourse_url += suffix
+        return discourse_url
+    return
+
 def vis_from_resource(url,context):
     # Create new CartoDB Vis is url field is empty
     if not url:
@@ -107,6 +125,9 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
     
     # IResourceController is needed if you need to auto generate a view once a resource is created.
     plugins.implements(plugins.IResourceController, inherit=True)
+    
+    # Declare that this plugin will implement ITemplateHelpers.
+    plugins.implements(plugins.ITemplateHelpers)
 
 
     # IConfigurer
@@ -114,12 +135,23 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
         toolkit.add_template_directory(config_, 'theme/templates')
         toolkit.add_resource('theme/public', 'cartodbmap')
         
+    # ITemplateHelpers
+    def get_helpers(self):
+        '''Register the get_discourse_url() function above as a template
+        helper function.
+
+        '''
+        # Template helper function names should begin with the name of the
+        # extension they belong to, to avoid clashing with functions from
+        # other extensions.
+        return {'ckanext_cartodbmap_get_discourse_url': get_discourse_url}
+        
     # IResourceView
     def info(self):
         schema  ={
             'cartodb_account': [ignore_missing,set_cartodb_username],
             'cartodb_key'    : [ignore_missing,set_cartodb_key],
-            'cartodb_vis_url': [ignore_missing,vis_from_resource],    
+            'cartodb_vis_url': [ignore_missing,vis_from_resource]
         }
 
         return {'name': 'cartodb-map',

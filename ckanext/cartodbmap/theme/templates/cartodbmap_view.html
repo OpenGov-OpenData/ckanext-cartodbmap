@@ -1,9 +1,11 @@
 {% resource 'cartodbmap/main' %}
+
 <div
   data-module = "cartodb_preview"
   data-module-resource-url = "{{ resource.url }}"
   data-module-resource-id = "{{ resource.id }}"
   data-module-cartodb-vis-url = "{{ resource_view.cartodb_vis_url }}"
+  data-module-discourse-url = "{{ h.ckanext_cartodbmap_get_discourse_url() }}"
   id = "cartodb-map-{{ resource_view.id }}"
   class = "cartodb-map"
   >

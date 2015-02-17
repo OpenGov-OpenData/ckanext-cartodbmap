@@ -46,15 +46,29 @@ div[data-module="resource-view-filters-form"] {
   top : 50%;
 }
 
+.map-button-div{
+  /* color:#187794; */
+  
+  /* background-color:rgba(120,120,120,.2);*/
+  color: rgba(140,140,140,1);
+  line-height:14px;
+  font-size:14px;
+  position:absolute;
+  bottom:7px;
+  z-index:999;
+  border: 1px solid rgba(140,140,140,1);
+  border-radius: 4px;
+  
+}
 
 
 .map-button{
   /* color:#187794; */
-  color: rgba(100,100,100,.8);
-  height: 10px;
-  vertical-align: 5px;
-  padding: 3px 6px;
+  color: rgba(140,140,140,1);
+  padding: 0px 0px;
   line-height:12px;
   font-size:12px;
-  
+  font-weight: 400;
+  text-shadow: none;
 }
+
