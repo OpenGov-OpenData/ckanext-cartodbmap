@@ -38,6 +38,22 @@ $("input[name='cartodb_vis_url']").blur(function() {
 
 // Spinner End
 
+
+var marker_style = {
+	radius:5,
+	stroke:true,
+	weight:1.7,
+	opacity:1,
+	color:"black",
+	fill:true,
+	fillColor:"#b2a1b3",
+	fillOpacity:1,
+	clickable:false,
+}
+var locate_zoom_level = 13;
+var marker;
+
+
 // cartodb preview module
 ckan.module('cartodb_preview', function (jQuery, _) {
   return {
@@ -51,6 +67,47 @@ ckan.module('cartodb_preview', function (jQuery, _) {
     		.on('done', function(vis,layers) {
     			    var map_attr = map_elem.append($("<div></div>").attr("id","cartodb-map-attribution"));
       				map_attr.append($("<a href='" + options.cartodbVisUrl+"' target='_blank>Go to this visualization</a>"))
+      				$(self.el).find('#map').find('.cartodb-tiles-loader').before('<div class="opendatacity-locate" style="display: block;"><a></a></div>')
+      				
+      				map = vis.getNativeMap();
+      				function detectUserLocation(){
+	 					if (navigator.geolocation) {
+	  						var timeoutVal = 10 * 1000 * 1000;
+	   						navigator.geolocation.getCurrentPosition(function(position) {
+	   								//mapToPosition(position);
+	   								
+	 								lon = position.coords.longitude;
+	 								lat = position.coords.latitude;
+	   								map.setView(new L.LatLng(lat,lon), locate_zoom_level);
+	   								if(marker){
+	 									marker.setLatLng([lat,lon]);
+	 								}
+	 								else {
+	 									marker = new L.CircleMarker([lat,lon],marker_style);
+	 									marker.addTo(map);
+	 								}
+	     						}, 	
+								alertError,
+								{ enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
+	   						);
+	 					}
+	 					else {
+	  						alert("Geolocation is not supported by this browser");
+	 					}
+	 
+					 	function alertError(error) {
+	   						var errors = { 
+	     						1: 'Permission denied',
+	     						2: 'Position unavailable',
+	     						3: 'Request timeout'
+	   						};
+	   						alert("Error: " + errors[error.code]);
+	 					}
+					}		
+					
+      				$('.opendatacity-locate').click(function() {
+	  					detectUserLocation();
+	  				})
 	    	}).on('error', function() {
     	  		//log the error
     		});
@@ -59,11 +116,13 @@ ckan.module('cartodb_preview', function (jQuery, _) {
 						+ '<img height=10 style="vertical-align:-24px;" src="//catalog.opendata.city/base/images/opendatacity_icon_sm.png">'
 						+ '</img></a>'
 						+ '</div>'))
+	  
 	  var button_box_html = '<div class="map-button-div" style="left:147px;">'
 	  					+ '&nbsp;'
-	  					
-	  // Add Data button			
-	  button_box_html	+= '<a id="go_to_cartodb_vis" target="_blank" href="' + options.resourceUrl.split('/download/')[0] + '" class="btn btn-link map-button">'
+	  
+	  
+	  // Add Data button	
+	  button_box_html	+= '<a id="go_to_data" target="_blank" href="' + options.resourceUrl.split('/download/')[0] + '" class="btn btn-link map-button">'
 						+	'Data'
 						+ '</a> '
 	  
