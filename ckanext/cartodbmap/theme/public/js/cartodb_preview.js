@@ -39,6 +39,7 @@ $("input[name='cartodb_vis_url']").blur(function() {
 // Spinner End
 
 
+/*
 var marker_style = {
 	radius:5,
 	stroke:true,
@@ -50,6 +51,12 @@ var marker_style = {
 	fillOpacity:1,
 	clickable:false,
 }
+*/
+var marker_style = L.icon({
+	iconUrl: 'fanstatic/cartodbmap/vendor/cartodb/img/location_pin.png',
+    iconSize: [24,34],
+	iconAnchor: [12,32]
+});
 var locate_zoom_level = 13;
 var marker;
 
@@ -83,7 +90,7 @@ ckan.module('cartodb_preview', function (jQuery, _) {
 	 									marker.setLatLng([lat,lon]);
 	 								}
 	 								else {
-	 									marker = new L.CircleMarker([lat,lon],marker_style);
+	 									marker = new L.marker([lat,lon], { icon: marker_style });
 	 									marker.addTo(map);
 	 								}
 	     						}, 	
