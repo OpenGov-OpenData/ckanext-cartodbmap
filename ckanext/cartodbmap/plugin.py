@@ -10,7 +10,7 @@ import requests, json
 
 ignore_missing = plugins.toolkit.get_validator('ignore_missing')
 
-CARTODB_FORMATS = ['csv','tsv','kml','kmz','xls', 'xlsx', 'geojson', 'gpx', 'osm', 'bz2', 'ods', 'zip']
+CARTODB_FORMATS = ['csv','tsv','kml','kmz','xls', 'xlsx', 'geojson', 'gpx', 'osm', 'bz2', 'ods', 'zip', '.zip']
 
 # Create New Cartodb Client
 cc = cartodb_client.CartoDBClient()
