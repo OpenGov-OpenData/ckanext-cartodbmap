@@ -54,7 +54,7 @@ div[data-module="resource-view-filters-form"] {
   line-height:14px;
   font-size:14px;
   position:absolute;
-  bottom:9px;
+  bottom:8px;
   z-index:999;
   border: 1px solid rgba(140,140,140,1);
   border-radius: 4px;
@@ -65,10 +65,10 @@ div[data-module="resource-view-filters-form"] {
 .map-button{
   /* color:#187794; */
   color: rgba(140,140,140,1);
-  padding: 3px 3px;
-  line-height:12px;
+  padding: 3px 3px 25px 3px;
+  line-height:14px;
   font-size:12px;
-  font-weight: 800;
+  font-weight: 600;
   text-shadow: none;
 }
 
