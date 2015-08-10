@@ -129,17 +129,17 @@ ckan.module('cartodb_preview', function (jQuery, _) {
 	  
 	  
 	  // Add Data button	
-	  button_box_html	+= '<a id="go_to_data" target="_blank" href="' + options.resourceUrl.split('/download/')[0] + '" class="btn btn-link map-button">'
+	  button_box_html	+= '<a id="go_to_data" target="_blank" href="' + options.resourceUrl.split('/download/')[0] + '" class="map-button">'
 						+	'Data'
 						+ '</a> '
 	  
 	  // Add Edit button
-	  button_box_html	+= '| <a id="go_to_cartodb_vis" target="_blank" href="' + options.cartodbVisUrl.replace('api/v2/','').replace('/viz.json','/map') + '" class="btn btn-link map-button">'
+	  button_box_html	+= '| <a id="go_to_cartodb_vis" target="_blank" href="' + options.cartodbVisUrl.replace('api/v2/','').replace('/viz.json','/map') + '" class="map-button">'
 						+	'Edit'
 						+ '</a> '
 	  // Add Talk button				
 	  if(options.discourseUrl && options.discourseUrl != 'None') {
-			button_box_html += '| <a id="go_to_discourse" target="_blank" href="' + options.discourseUrl + '" class="btn btn-link map-button">'
+			button_box_html += '| <a id="go_to_discourse" target="_blank" href="' + options.discourseUrl + '" class="map-button">'
 							+	'Talk'
 							+ '</a>'
 	  }

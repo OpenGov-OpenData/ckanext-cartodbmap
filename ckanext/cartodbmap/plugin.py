@@ -132,6 +132,7 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
 
     # IConfigurer
     def update_config(self, config_):
+        toolkit.add_public_directory(config_, 'theme/public')
         toolkit.add_template_directory(config_, 'theme/templates')
         toolkit.add_resource('theme/public', 'cartodbmap')
         
