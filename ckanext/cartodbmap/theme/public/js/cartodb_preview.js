@@ -118,13 +118,13 @@ ckan.module('cartodb_preview', function (jQuery, _) {
 	    	}).on('error', function() {
     	  		//log the error
     		});
-	  self.el.append($('<div style="position:absolute;bottom:8px;left:86px;z-index:999">'
-						+ ' <a id="get_the_data" href="http://www.opendata.city" target="_blank">'
-						+ '<img height=10 style="vertical-align:-24px;" src="//catalog.opendata.city/base/images/opendatacity_icon_sm.png">'
+	  self.el.append($('<div style="position:absolute;bottom:6px;left:84px;z-index:999">'
+						+ ' <a id="get_the_data" href="http://www.civicdashboards.com" target="_blank">'
+						+ '<img style="height:22px;" src="fanstatic/cartodbmap/img/civicdashboards_logo_grey.png">'
 						+ '</img></a>'
 						+ '</div>'))
 	  
-	  var button_box_html = '<div class="map-button-div" style="left:147px;">'
+	  var button_box_html = '<div class="map-button-div" style="left:210px;">'
 	  					+ '&nbsp;'
 	  
 	  
