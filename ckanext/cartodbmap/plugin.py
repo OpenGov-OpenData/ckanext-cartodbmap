@@ -10,7 +10,7 @@ import requests, json
 
 ignore_missing = plugins.toolkit.get_validator('ignore_missing')
 
-CARTODB_FORMATS = ['csv','tsv','kml','kmz','xls', 'xlsx', 'geojson', 'gpx', 'osm', 'bz2', 'ods', 'zip', '.zip']
+CARTODB_FORMATS = ['csv','tsv','kml','kmz','xls', 'xlsx', 'geojson', 'gpx', 'osm', 'bz2', 'ods', 'zip', '.zip', 'gz']
 
 # Create New Cartodb Client
 cc = cartodb_client.CartoDBClient()
@@ -69,11 +69,11 @@ def vis_from_resource(url,context):
         resource_id = plugins.toolkit.c.__getattr__("resource_id")
         resource = toolkit.get_action('resource_show')(context,{'id': resource_id})
         resource_url = resource["url"]
-        resoruce_format_lower = resource["format"].lower()
+        resource_format_lower = resource["format"].lower()
         
         # Check if CartoDB accepts current file format
-        if not (resoruce_format_lower in CARTODB_FORMATS):
-            message = plugins.toolkit._('Unsupported CartoDB file format: ' + resoruce_format_lower)
+        if not (resource_format_lower in CARTODB_FORMATS):
+            message = plugins.toolkit._('Unsupported CartoDB file format: ' + resource_format_lower)
             raise plugins.toolkit.Invalid(message)
         
         cartodb_obj = cc.create_cartodb_resource_view(resource_url)
