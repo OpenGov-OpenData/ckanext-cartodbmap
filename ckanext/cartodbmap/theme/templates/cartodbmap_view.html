@@ -1,11 +1,6 @@
 {% resource 'cartodbmap/main' %}
-<!--
-<script src="//libs.cartocdn.com/cartodb.js/v3/cartodb.js"></script>
-<script type="text/javascript" src="//libs.cartocdn.com/cartodb.js/v3/cartodb.mod.torque.js" async=""></script>
--->
-<script src="fanstatic/cartodbmap/vendor/cartodb/js/cartodb.js" charset="UTF-8"></script>
-<script type="text/javascript" src="fanstatic/cartodbmap/vendor/cartodb/js/cartodb.mod.torque.js" charset="UTF-8"></script>
-
+<script src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.js"></script>
+<script type="text/javascript" src="http://libs.cartocdn.com/cartodb.js/v3/3.15/cartodb.mod.torque.js" async=""></script>
 <style>
 .opendatacity-locate {
   display: none;
@@ -18,8 +13,8 @@
 }
 .opendatacity-locate a {
   display: block;
-  width: 30px;
-  height: 30px;
+  width: 14px;
+  height: 14px;
   padding: 7px;
   background: #fff url(fanstatic/cartodbmap/vendor/cartodb/img/locate.png) no-repeat -25px 3px;
   -webkit-box-shadow: rgba(0,0,0,.2) 0 0 4px 2px;
@@ -34,6 +29,10 @@
 }
 .opendatacity-locate a:hover {
 	background: #fff url(fanstatic/cartodbmap/vendor/cartodb/img/locate.png) no-repeat 3px 3px;
+}
+
+.leaflet-control-scale, .leaflet-control-minimap{
+	top: 60px;
 }
 </style>
 <div
