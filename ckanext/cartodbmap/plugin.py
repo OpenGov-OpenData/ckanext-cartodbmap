@@ -26,7 +26,7 @@ def set_cartodb_username(username,context):
         message = plugins.toolkit._('Missing Username')
         raise plugins.toolkit.Invalid(message)
     '''
-    cc.cartodb_url = 'https://'+ cc.username +'.cartodb.com'
+    cc.cartodb_url = 'https://'+ cc.username +'.carto.com'
     return
       
 def set_cartodb_key(key,context):
@@ -188,7 +188,7 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
             resource = data_dict
             if resource.get('format').lower() == 'geojson':
                 cc.username = h.config.get('ckanext.cartodbmap.cartodb.username')
-                cc.cartodb_url = 'https://'+ cc.username +'.cartodb.com'
+                cc.cartodb_url = 'https://'+ cc.username +'.carto.com'
                 cc.api_key = h.config.get('ckanext.cartodbmap.cartodb.key')
                 
                 

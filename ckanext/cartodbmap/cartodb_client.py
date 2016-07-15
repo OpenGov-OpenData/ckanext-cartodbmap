@@ -21,7 +21,7 @@ class CartoDBClient:
         self.username = username
         self.api_key = api_key
             
-        self.cartodb_url = 'https://'+ self.username +'.cartodb.com'
+        self.cartodb_url = 'https://'+ self.username +'.carto.com'
         
     # Private Methods
     def __upload_url_resource(self,resource_url):
@@ -127,7 +127,7 @@ class CartoDBClient:
                 if(cartodb_obj['response']["table_name"]):
                     r = self.__get_table_details(cartodb_obj['response']["table_name"] )
                     cartodb_obj['response']["table_vis_id"] = r.json().get("table_visualization",{}).get("id")
-                    r = self.__create_visualization_from_table(cartodb_obj['response']["table_vis_id"], cartodb_obj['response']["table_name"] + " - Created by OpenData.city CKAN Extension")
+                    r = self.__create_visualization_from_table(cartodb_obj['response']["table_vis_id"], cartodb_obj['response']["table_name"] + " - Created by Carto CKAN Extension")
                     cartodb_obj['response']["vis_id"] = r.json().get('id')
                     if(cartodb_obj['response']["vis_id"]):
                         cartodb_obj['response']["cartodb_vis_url"] = self.cartodb_url+ "/api/v2/viz/" + cartodb_obj['response']["vis_id"] + "/viz.json"
