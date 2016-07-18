@@ -181,7 +181,7 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
         return 'cartodbmap_view.html'
 
     def form_template(self, context, data_dict):
-        # Set default view name to CartoDB View
+        # Set default view name to Carto View
         if(not 'title' in data_dict["resource_view"]):
             data_dict["resource_view"]["title"] = "Carto View"
         return 'cartodbmap_form.html'
