@@ -10,10 +10,10 @@ import requests, json
 
 ignore_missing = plugins.toolkit.get_validator('ignore_missing')
 
-# per http://docs.cartodb.com/cartodb-editor/datasets/#supported-file-formats
+# per https://carto.com/docs/carto-engine/import-api/importing-geospatial-data/#supported-geospatial-data-formats
 CARTODB_FORMATS = ['csv','tsv','kml','kmz','xls', 'xlsx', 'geojson', 'gpx', 'osm', 'bz2', 'ods', 'zip', '.zip', 'gz', 'tgz']
 
-# Create New Cartodb Client
+# Create New CartoDB Client
 cc = cartodb_client.CartoDBClient()
 
 def set_cartodb_username(username,context):
@@ -52,6 +52,7 @@ def get_discourse_url():
             package_name = pkg_dict.get("name")
         except:
             package_name = plugins.toolkit.c.__getattr__("id")
+        
         discourse_url += "/t/"
         discourse_url += package_name
         discourse_url += "-"
@@ -60,10 +61,10 @@ def get_discourse_url():
     return
 
 def vis_from_resource(url,context):
-    # Create new CartoDB Vis is url field is empty
+    # Create new CartoDB Vis if url field is empty
     if not url:
         if not (cc.api_key and cc.username):
-            message = plugins.toolkit._('Missing CartoDB Username/API Key')
+            message = plugins.toolkit._('Missing Carto Username/API Key')
             raise plugins.toolkit.Invalid(message)
         
         # Get resource url
@@ -74,7 +75,7 @@ def vis_from_resource(url,context):
         
         # Check if CartoDB accepts current file format
         if not (resource_format_lower in CARTODB_FORMATS):
-            message = plugins.toolkit._('Unsupported CartoDB file format: ' + resource_format_lower)
+            message = plugins.toolkit._('Unsupported Carto file format: ' + resource_format_lower)
             raise plugins.toolkit.Invalid(message)
         
         cartodb_obj = cc.create_cartodb_resource_view(resource_url)
@@ -112,7 +113,7 @@ def create_bounding_box(context,package_id,table_name):
                         }
                     )
         bbox = r.json().get('rows',[None])[0].get('table_extent')
-    
+        
         bbox_str = "{'type':'Polygon','coordinates': [[[" + bbox.replace('POLYGON((','').replace('))','').replace(',','],[').replace(' ',',') + "]]]}"
         bbox_str = bbox_str.replace("'",'"')
         
@@ -150,17 +151,19 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
         
     # IResourceView
     def info(self):
-        schema  ={
+        schema = {
             'cartodb_account': [ignore_missing,set_cartodb_username],
             'cartodb_key'    : [ignore_missing,set_cartodb_key],
             'cartodb_vis_url': [ignore_missing,vis_from_resource]
         }
 
-        return {'name': 'cartodb-map',
-                'title': 'CartoDB Map',
-                'icon': 'compass',
-                'schema': schema,
-                'iframed': False}
+        return {
+            'name': 'cartodb-map',
+            'title': 'Carto Map',
+            'icon': 'compass',
+            'schema': schema,
+            'iframed': False,
+        }
     
     def can_view(self, data_dict):
         return True
@@ -169,9 +172,10 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
         resource = data_dict['resource']
         resource_view = data_dict['resource_view']
         resource_url = data_dict['resource']['url']
-        return {'resource': resource,
-                'resource_view': resource_view,
-                }
+        return {
+            'resource': resource,
+            'resource_view': resource_view,
+        }
     
     def view_template(self, context, data_dict):
         return 'cartodbmap_view.html'
@@ -179,7 +183,7 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
     def form_template(self, context, data_dict):
         # Set default view name to CartoDB View
         if(not 'title' in data_dict["resource_view"]):
-            data_dict["resource_view"]["title"] = "CartoDB View"
+            data_dict["resource_view"]["title"] = "Carto View"
         return 'cartodbmap_form.html'
     
     # IResourceController
@@ -199,9 +203,9 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
                     raise plugins.toolkit.Invalid(message)
                 
                 view = {
-                    'title': 'CartoDB View',
+                    'title': 'Carto View',
                     # detect when it is a service, not a file
-                    'description': 'CartoDB View of the GeoJSON file',
+                    'description': 'Carto View of the GeoJSON file',
                     'resource_id': resource['id'],
                     'view_type': 'cartodb-map',
                     'cartodb_vis_url' : cartodb_obj['response']['cartodb_vis_url']
@@ -213,9 +217,7 @@ class CartodbmapPlugin(plugins.SingletonPlugin):
                 except:
                     print "Failed creating bounding box."
         except:
-            print "!!!! Warning:: Unable create default CartoDB view"
+            print "!!!! Warning:: Unable create default Carto view"
                 
     def after_create(self, context, data_dict):
         self.add_default_cartodb_view(context, data_dict)
-    
-    

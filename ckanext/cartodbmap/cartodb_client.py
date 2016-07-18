@@ -15,12 +15,10 @@ def url_exists(path):
     return r.status_code == requests.codes.ok
 
 class CartoDBClient:
-    def __init__(self,
-                    username="",
-                    api_key=""):
+    def __init__(self, username="", api_key=""):
         self.username = username
         self.api_key = api_key
-            
+        
         self.cartodb_url = 'https://'+ self.username +'.carto.com'
         
     # Private Methods
@@ -43,7 +41,6 @@ class CartoDBClient:
             "api_key" : self.api_key
         }
         endpoint = self.cartodb_url + '/api/v1/imports/'+item_queue_id;
-        
         r = requests.get(endpoint
                         ,data=resource_dict
                         ,headers={
@@ -73,7 +70,6 @@ class CartoDBClient:
         }
         resource_dict = json.dumps(resource_dict)
         endpoint = self.cartodb_url + '/api/v1/viz';
-    
         r = requests.post(endpoint
                         ,data=resource_dict
                         ,headers={
@@ -146,6 +142,3 @@ class CartoDBClient:
         cartodb_obj['success'] = False
         cartodb_obj['messages']['error_message'] = r.json()
         return cartodb_obj
-            
-            
-    
