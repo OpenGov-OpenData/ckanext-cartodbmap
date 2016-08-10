@@ -70,7 +70,13 @@ def vis_from_resource(url,context):
         # Get resource url
         resource_id = plugins.toolkit.c.__getattr__("resource_id")
         resource = toolkit.get_action('resource_show')(context,{'id': resource_id})
-        resource_url = resource["url"]
+        if resource["url"].startswith('/datastore/dump/'):
+            host = h.config.get('ckan.site_url')
+            while host.endswith('/'):
+                host = host[:-1]
+            resource_url = host + resource["url"]
+        else:
+            resource_url = resource["url"]
         resource_format_lower = resource["format"].lower()
         
         # Check if CartoDB accepts current file format
