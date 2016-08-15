@@ -12,7 +12,13 @@ Add following in config settings::
     ckanext.cartodbmap.cartodb.username = <CartoDB Username Here> 
     ckanext.cartodbmap.cartodb.key = <API Key here> 
 
-Extras:
+
+The following can also be optionally added::
+
+Set a limit for DataStore resources. Resources with a row count higher than the limit will not have a view created, the default value is 100000::
+
+    ckanext.cartodbmap.datastore.limit = 100000
+
 
 Remove geojson_preview from ckan.plugins list
 

@@ -60,6 +60,32 @@ def get_discourse_url():
         return discourse_url
     return
 
+def set_datastore_limit():
+    """
+    Returns the row limit for datastore resources
+    """
+    try:
+        row_limit = h.config.get('ckanext.cartodbmap.datastore.limit',100000).replace(',','')
+        row_limit = long(row_limit)
+    except:
+        row_limit = 100000
+    return row_limit
+
+def get_datastore_count(resource_id):
+    """
+    Given a resource_id of a DataStore resource, return the row count
+    """
+    try:
+        datastore = toolkit.get_action('datastore_info')(None, {'id': resource_id})
+        if datastore.get('meta', False):
+            meta = datastore.get('meta', False)
+            if meta.get('count', False):
+                datastore_count = meta.get('count')
+                datastore_count = long(datastore_count)
+    except:
+        datastore_count = 0
+    return datastore_count
+
 def vis_from_resource(url,context):
     # Create new CartoDB Vis if url field is empty
     if not url:
@@ -71,10 +97,16 @@ def vis_from_resource(url,context):
         resource_id = plugins.toolkit.c.__getattr__("resource_id")
         resource = toolkit.get_action('resource_show')(context,{'id': resource_id})
         if resource["url"].startswith('/datastore/dump/'):
-            host = h.config.get('ckan.site_url')
-            while host.endswith('/'):
-                host = host[:-1]
-            resource_url = host + resource["url"]
+            row_limit = set_datastore_limit()
+            row_count = get_datastore_count(resource_id)
+            if long(row_count) < long(row_limit):
+                host = h.config.get('ckan.site_url')
+                while host.endswith('/'):
+                    host = host[:-1]
+                resource_url = host + resource["url"]
+            else:
+                message = plugins.toolkit._('DataStore resource is too large, limit is set to ' + str(row_limit) + ' rows')
+                raise plugins.toolkit.Invalid(message)
         else:
             resource_url = resource["url"]
         resource_format_lower = resource["format"].lower()
