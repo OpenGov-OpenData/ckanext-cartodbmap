@@ -25,7 +25,9 @@ class CartoDBClient:
     def __upload_url_resource(self,resource_url):
         resource_dict = {
             "api_key" : self.api_key,
-            "url": resource_url
+            "url": resource_url,
+            "create_vis" : "true",
+            "privacy" : "link"
         }
         endpoint = self.cartodb_url + '/api/v1/imports';
         r = requests.post(endpoint
@@ -77,7 +79,20 @@ class CartoDBClient:
                         }
                     )
         return r 
-
+	
+    def __publish_vis(self,table_vis_id):
+        resource_dict = {
+            "api_key" : self.api_key
+        }
+        resource_dict = json.dumps(resource_dict)
+        endpoint = self.cartodb_url + '/api/v3/viz/' + table_vis_id + '/mapcaps';
+        r = requests.post(endpoint
+                        ,data=resource_dict
+                        ,headers={
+                            "Content-Type" : "application/json"
+                        }
+                    )
+        return r 
     
     # Public Methods
     def create_cartodb_resource_view(self,resource_url):
@@ -119,18 +134,19 @@ class CartoDBClient:
                     r = self.__get_import_queue(cartodb_obj['response']['item_queue_id'])
                     state = r.json().get("state")
                     time.sleep(.5)
-                cartodb_obj['response']["table_name"] =  r.json().get("table_name")
-                if(cartodb_obj['response']["table_name"]):
-                    r = self.__get_table_details(cartodb_obj['response']["table_name"] )
-                    cartodb_obj['response']["table_vis_id"] = r.json().get("table_visualization",{}).get("id")
-                    r = self.__create_visualization_from_table(cartodb_obj['response']["table_vis_id"], cartodb_obj['response']["table_name"] + " - Created by Carto CKAN Extension")
-                    cartodb_obj['response']["vis_id"] = r.json().get('id')
-                    if(cartodb_obj['response']["vis_id"]):
-                        cartodb_obj['response']["cartodb_vis_url"] = self.cartodb_url+ "/api/v2/viz/" + cartodb_obj['response']["vis_id"] + "/viz.json"
-                        cartodb_obj['success'] = True
-                        return cartodb_obj
-                    else:
-                        cartodb_obj['messages']['user_message'] = "Failed Creating Visualization."
+                
+                if r.json().get('table_name'):
+		    cartodb_obj['response']["table_name"] =  r.json().get('table_name')
+                    cartodb_obj['response']["vis_id"] = r.json().get('visualization_id')
+		    
+                    try:
+	                r = self.__publish_vis(cartodb_obj['response']["vis_id"])
+                    except:
+			None
+                    
+		    cartodb_obj['response']["cartodb_vis_url"] = self.cartodb_url+ "/api/v2/viz/" + cartodb_obj['response']["vis_id"] + "/viz.json"
+                    cartodb_obj['success'] = True
+                    return cartodb_obj
                 else:
                     cartodb_obj['messages']['user_message'] = "Failed Creating Table."
             else:
