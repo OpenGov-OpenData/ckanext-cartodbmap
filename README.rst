@@ -1,8 +1,8 @@
 =============
-ckanext-cartodbmap (CKAN CartoDB ResourceView)
+ckanext-cartodbmap (CKAN Carto ResourceView)
 =============
 
-Use CartoDB as a more powerful/performant way to visualize geospatial data in CKAN.  And not just visualize, but actually start telling stories as well with round-tripping support with CartoDB editor.
+Use Carto as a more powerful/performant way to visualize geospatial data in CKAN.  And not just visualize, but actually start telling stories as well with round-tripping support with the Carto Builder editor.
 
 ---------------
 Config Settings
